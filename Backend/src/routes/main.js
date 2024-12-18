@@ -1,12 +1,13 @@
-import express from 'express';
+const express = require('express');
 const router= express.Router();
-import studentRouter from './users';
-import teacherRouter from './product';
+const studentRouter = require('./student');
+const teacherRouter = require('./teacher');
+
 
 router.use('/student',studentRouter);
 router.use('/teacher',teacherRouter);
 
-export default router;
+module.exports=router;
 
 
 

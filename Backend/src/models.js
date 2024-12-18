@@ -1,5 +1,6 @@
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+
 dotenv.config({ path: '.env' });
 
 const databaseUrl = process.env.DATABASE_URL;
@@ -37,7 +38,14 @@ mongoose.connect(databaseUrl)
     oauthId: {
       type: String,  // OAuth ID from the authentication provider (Google, GitHub, etc.)
       required: true
-    }
+    },
+
+    courses:[{
+      type:mongoose.Schema.Types.ObjectId,
+      ref:'Course',
+
+    }]
+
 
   });
 
@@ -77,6 +85,10 @@ mongoose.connect(databaseUrl)
     createdAt: {
       type: Date,
       default: Date.now
+    },
+    duration: {
+      type: Number,
+      required: true
     }
   });
 
