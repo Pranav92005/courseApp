@@ -1,6 +1,6 @@
-import Navigation from "@/components/navigation"
-import TopCourses from "@/components/top_courses"
-import Footer from "@/components/footer"
+import Navigation from "@/components/Studentcomponent/navigation"
+import TopCourses from "@/components/Studentcomponent/top_courses"
+import Footer from "@/components/Studentcomponent/footer"
 
 export default function Mycourses() {
   return (

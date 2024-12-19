@@ -1,6 +1,6 @@
-import Footer from "@/components/footer";
-import Navigation from "@/components/navigation";
-import TopCourses from "@/components/top_courses";
+import Footer from "@/components/Studentcomponent/footer";
+import Navigation from "@/components/Studentcomponent/navigation";
+import TopCourses from "@/components/Studentcomponent/top_courses";
 
 
 export default function Courses() {

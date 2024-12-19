@@ -1,7 +1,7 @@
-import Navigation from '@/components/navigation'
-import ActiveCourses from '@/components/activecourses'
-import TopCourses from '@/components/top_courses'
-import Footer from '@/components/footer'
+import Navigation from '@/components/Studentcomponent/navigation'
+import ActiveCourses from '@/components/Studentcomponent/activecourses'
+import TopCourses from '@/components/Studentcomponent/top_courses'
+import Footer from '@/components/Studentcomponent/footer'
 
 export default function Dashboard() {
   return (
