@@ -42,6 +42,9 @@ A web application to streamline the management of courses, lectures, and materia
 - **zod**: For schema validation and role-based authorization.
 - **OAuth**: For secure user login.
 
+### Admin
+- A separate Admin dashboard for monitoring all the activities involvinf top cources, active cources etc.
+- Only the admin can access as it with his/her own credentials.
 
 
 ## Installation and Setup
