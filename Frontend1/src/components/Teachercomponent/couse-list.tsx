@@ -1,61 +1,83 @@
 
-
+import { Loader } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import axios from 'axios'
+import { BACKEND_URL } from '@/lib/config'
+import { useEffect } from 'react'
 // import { Textarea } from '@/components/ui/textarea'
 
 type Course = {
-  id: number
+  _id: number
   title: string
   description: string
   lectures: Lecture[]
 }
 
 type Lecture = {
-  id: number
+  _id: number
   title: string
   content: string
   date: string
   materials: string[]
 }
 
-const initialCourses: Course[] = [
-  {
-    id: 1,
-    title: 'Introduction to React',
-    description: 'Learn the basics of React',
-    lectures: [
-      { id: 1, title: 'React Fundamentals', date: '2023-06-15', content:"", materials: ['Slides.pdf', 'Code.zip'] },
-      { id: 2, title: 'State and Props', date: '2023-06-22', content:"", materials: ['Slides.pdf'] },
-    ],
-  },
-  {
-    id: 2,
-    title: 'Advanced JavaScript',
-    description: 'Deep dive into JavaScript concepts',
-    lectures: [
-      { id: 1, title: 'Closures and Scopes',content:"", date: '2023-06-18', materials: ['Notes.pdf'] },
-    ],
-  },
-]
+// const initialCourses: Course[] = [
+//   {
+//     id: 1,
+//     title: 'Introduction to React',
+//     description: 'Learn the basics of React',
+//     lectures: [
+//       { id: 1, title: 'React Fundamentals', date: '2023-06-15', content:"", materials: ['Slides.pdf', 'Code.zip'] },
+//       { id: 2, title: 'State and Props', date: '2023-06-22', content:"", materials: ['Slides.pdf'] },
+//     ],
+//   },
+//   {
+//     id: 2,
+//     title: 'Advanced JavaScript',
+//     description: 'Deep dive into JavaScript concepts',
+//     lectures: [
+//       { id: 1, title: 'Closures and Scopes',content:"", date: '2023-06-18', materials: ['Notes.pdf'] },
+//     ],
+//   },
+// ]
 
 export function CourseList() {
-  const [courses, setCourses] = useState<Course[]>(initialCourses)
+  const [courses, setCourses] = useState<Course[]>([]);
+  const[isloading, setIsloading] = useState(false); 
 //   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null)
   const [newLecture, setNewLecture] = useState({ title: '', date: '' })
   const [newMaterial, setNewMaterial] = useState({ lectureId: 0, file: null as File | null })
 
+
+
+
+
+
+
+  
+
+
+useEffect(() => {
+    setIsloading(true);
+    axios.get(`${BACKEND_URL}/student/mycourse`,{headers:{"Authorization":`Bearer ${localStorage.getItem("token")}`}}
+    ).then((res)=>{
+      console.log(res.data);
+      setCourses(res.data.courses);
+    }).catch((err)=>{console.log(err)}).finally(()=>{setIsloading(false)});
+  },[]);
+
   const handleScheduleLecture = (courseId: number) => {
     if (newLecture.title && newLecture.date) {
       setCourses(courses.map(course => {
-        if (course.id === courseId) {
+        if (course._id === courseId) {
           return {
             ...course,
-            lectures: [...course.lectures, { id: Date.now(), content: '', ...newLecture, materials: [] }]
+            lectures: [...course.lectures, { _id: Date.now(), content: '', ...newLecture, materials: [] }]
           }
         }
         return course
@@ -67,11 +89,11 @@ export function CourseList() {
   const handleUploadMaterial = (courseId: number, lectureId: number) => {
     if (newMaterial.file) {
       setCourses(courses.map(course => {
-        if (course.id === courseId) {
+        if (course._id === courseId) {
           return {
             ...course,
             lectures: course.lectures.map(lecture => {
-              if (lecture.id === lectureId) {
+              if (lecture._id === lectureId) {
                 return {
                   ...lecture,
                   materials: [...lecture.materials, newMaterial.file!.name]
@@ -88,9 +110,12 @@ export function CourseList() {
   }
 
   return (
+   
     <div className="space-y-6">
+       {isloading && <Loader className="mx-auto" size={50} />}
+       {courses.length === 0 && <h2 className="text-2xl font-bold mb-4">No Active Courses ,kindly create one</h2>}
       {courses.map(course => (
-        <Card key={course.id}>
+        <Card key={course._id}>
           <CardHeader>
             <CardTitle>{course.title}</CardTitle>
             <CardDescription>{course.description}</CardDescription>
@@ -99,7 +124,7 @@ export function CourseList() {
             <h3 className="text-lg font-semibold mb-2">Lectures</h3>
             <ul className="space-y-2">
               {course.lectures.map(lecture => (
-                <li key={lecture.id} className="flex items-center justify-between">
+                <li key={lecture._id} className="flex items-center justify-between">
                   <div>
                     <span className="font-medium">{lecture.title}</span>
                     <span className="text-sm text-muted-foreground ml-2">({lecture.date})</span>
@@ -124,12 +149,12 @@ export function CourseList() {
                               id="material"
                               type="file"
                               className="col-span-3"
-                              onChange={(e) => setNewMaterial({ lectureId: lecture.id, file: e.target.files ? e.target.files[0] : null })}
+                              onChange={(e) => setNewMaterial({ lectureId: lecture._id, file: e.target.files ? e.target.files[0] : null })}
                             />
                           </div>
                         </div>
                         <DialogFooter>
-                          <Button onClick={() => handleUploadMaterial(course.id, lecture.id)}>Upload</Button>
+                          <Button onClick={() => handleUploadMaterial(course._id, lecture._id)}>Upload</Button>
                         </DialogFooter>
                       </DialogContent>
                     </Dialog>
@@ -174,7 +199,7 @@ export function CourseList() {
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button onClick={() => handleScheduleLecture(course.id)}>Schedule</Button>
+                  <Button onClick={() => handleScheduleLecture(course._id)}>Schedule</Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>

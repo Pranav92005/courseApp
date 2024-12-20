@@ -86,7 +86,7 @@ studentRouter.get('/courses',authorize('student') ,async(req,res)=>{
 
 
 //user enrolled course 
-studentRouter.get('/mycourse',authorize('student'),async(req,res)=>{
+studentRouter.get('/mycourse',authorize(['student','teacher']),async(req,res)=>{
     const userId = req.user.id; // Extracted from token by middleware
 
     try {

@@ -69,8 +69,8 @@ mongoose.connect(databaseUrl)
       ref: 'User'  // Array of students (User references)
     }],
     lectures: [{
-      title: String,
-      content: String,  // Could be a URL to the lecture material (slides, videos, etc.)
+      type:mongoose.Schema.Types.ObjectId,
+       ref:'Lecture' ,// Could be a URL to the lecture material (slides, videos, etc.)
       date: {
         type: Date,
         required: true

@@ -2,7 +2,7 @@ const express = require('express');
 const lectureRouter = express.Router();
 const { Lecture } = require('../models');
 
-lectureRouter.post('/add', async (req, res) => {
+lectureRouter.post('/add/:id', async (req, res) => {
     const {title, content, date} = req.body;
     const lecture = await Lecture.create({
         title,
@@ -12,7 +12,7 @@ lectureRouter.post('/add', async (req, res) => {
     res.status(201).json({ lecture });
 })
 
-lectureRouter.get('/getAll', async (req, res) => {
+lectureRouter.get('/getAll/:id', async (req, res) => {
     const lectures = await Lecture.find();
     res.status(200).json({ lectures });
 })

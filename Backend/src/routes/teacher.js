@@ -8,7 +8,7 @@ const authorize = require('../middleware');
 const courseSchema=zod.object({
     title:zod.string().nonempty(),
     description:zod.string().nonempty(),
-    duration:zod.number().int(),
+    duration:zod.string(),
     
 });
 
@@ -43,8 +43,6 @@ try{
 //teacher course update route (add lecture,notes,etc)
 //multer for file upload and create file link and save it to db under lecture section of course
 
-teacherRouter.put('/course/:id',authorize('teacher'),async(req,res)=>{
-    
-})
+
 
 module.exports=teacherRouter;

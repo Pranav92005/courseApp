@@ -1,25 +1,43 @@
 
 
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { MainNav } from '@/components/Teachercomponent/mainNav'
+import axios from 'axios'
+import { BACKEND_URL } from '@/lib/config'
+import {toast,Toaster} from 'react-hot-toast'
 
 export default function CreateCoursePage() {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const navigate = useNavigate()
+  const [duration, setduration] = useState('')
+  
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     // Here you would typically send this data to your backend
-    console.log({ title, description })
+
+    console.log({ title, description,duration })
+    axios.post(`${BACKEND_URL}/teacher/course`, {
+      title,
+      description,
+      duration
+    },{headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}})
+    .then((res) => {
+      console.log(res.data)
+      toast.success('Course created successfully!')
+    })
+    .catch((err) => {
+      console.error(err)
+      toast.error('Failed to create course')
+    })
     // For now, we'll just redirect to the dashboard
-    navigate('/')
+  
   }
 
   return (
@@ -28,7 +46,7 @@ export default function CreateCoursePage() {
     <div >
     <MainNav/>
     </div>
-
+<Toaster/>
      <div className="max-w-2xl md:mx-auto mt-4 mx-4 ">
       <h1 className="text-3xl font-bold mb-6">Create a New Course</h1>
       <Card>
@@ -45,6 +63,18 @@ export default function CreateCoursePage() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Enter course title"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="Duration">Course Duration in Weeks</Label>
+              <Input
+                id="Duration"
+                type='number'
+                value={duration}
+                onChange={(e) => setduration(e.target.value)}
+                placeholder="Enter course Duration"
                 required
               />
             </div>
