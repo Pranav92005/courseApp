@@ -71,10 +71,7 @@ mongoose.connect(databaseUrl)
     lectures: [{
       type:mongoose.Schema.Types.ObjectId,
        ref:'Lecture' ,// Could be a URL to the lecture material (slides, videos, etc.)
-      date: {
-        type: Date,
-        required: true
-      }
+      
     }],
     createdAt: {
       type: Date,
@@ -92,21 +89,16 @@ mongoose.connect(databaseUrl)
       type: String,
       required: true
     },
-    content: {
-      type: String,
-      required: true
-    },
+    
     date: {
       type: Date,
       required: true
     },
-    course: {
-      type: mongoose.Schema.Types.ObjectId, // course it is associated with
-      ref: 'Course',
-    },
+  
     materials : {
       type : [String]
-    }
+    },
+  
   });
 
  const User = mongoose.model('User', userSchema);

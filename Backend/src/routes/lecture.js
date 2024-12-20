@@ -1,70 +1,66 @@
 const express = require('express');
 const lectureRouter = express.Router();
-const { Lecture } = require('../models');
+const { Lecture, Course } = require('../models');
 const multer = require('multer');
 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, 'uploads'); // Files will be saved in 'uploads' folder
-    },
-    filename: (req, file, cb) => {
-      cb(null, Date.now() + path.extname(file.originalname)); // Append timestamp to avoid duplicate filenames
-    },
+    destination: (req, file, cb) => cb(null, "uploads/"), // Save to "uploads" folder
+    filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`), // Unique name
   });
-  const upload = multer({ storage: storage });
+  const upload = multer({ storage });
 
 
+  //schedule lecture route
 lectureRouter.post('/add/:id', async (req, res) => {
-    const {title, content, date} = req.body;
-    const lecture = await Lecture.create({
+    const {title, date} = req.body;
+     const courseId= req.params.id;
+  const lecture = await Lecture.create({
         title,
-        content,
         date
     });
+    const course=await Course.findByIdAndUpdate(courseId, {
+        $push: {lectures: lecture._id}
+    })
+
     res.status(201).json({ lecture });
 })
 
-lectureRouter.get('/getAll/:id', async (req, res) => {
-    const lectures = await Lecture.find();
-    res.status(200).json({ lectures });
-})
 
-lectureRouter.get('/get/:id', async (req, res) => {
-    const id = req.params.id;
-    const lecture = await Lecture.findById(id);
+lectureRouter.post('/upload/:id', upload.single('file'), async (req, res) => {
+    try {
+        const { file } = req;
 
-    if(lecture)
-        res.status(200).json({ lecture });  
-    else
-        res.status(404).json({ message: 'Lecture not found' });
-})
+        if (!file) {
+            return res.status(400).json({ message: "Material is required" });
+        }
 
-// lectureRouter.patch('/update/:id', async (req, res) => {
-//     const id = req.params.id;
-//     var file = null;
-    
-//     const lecture = await Lecture.findByIdAndUpdate(id, {
-        
-//     });
-//     res.status(200).json({ lecture });
-// })  
+        const material = `http://localhost:3000/uploads/${file.filename}`;
+        const id = req.params.id;
 
-lectureRouter.post('/upload', upload.single('file'), async (req, res) => {
-    var file = null;
-    try{
-        file = req.file;
-       
-        lectureRouter.patch('/update/:id', async (req, res) => {
-            const id = req.params.id;
-            const lecture = await Lecture.findByIdAndUpdate(id, {
-                materials: [...materials, file.path]
-            });
-            res.status(200).json({ lecture });
-        })
+        // Find the lecture to retrieve existing materials
+        const lecture = await Lecture.findById(id);
+
+        if (!lecture) {
+            return res.status(404).json({ message: "Lecture not found" });
+        }
+
+        // Add the new material to the existing materials array
+        const updatedLecture = await Lecture.findByIdAndUpdate(
+            id,
+            { materials: [...(lecture.materials || []), material] },
+            { new: true }
+        );
+
+        res.status(200).json({
+            message: "Material uploaded successfully",
+            lecture: updatedLecture,
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Server error" });
     }
-    catch(err){
-        console.log(err);
-    }
-})
+});
+
+
 
 module.exports = lectureRouter;

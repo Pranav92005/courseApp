@@ -1,7 +1,7 @@
 const express=require('express');
 const studentRouter=express.Router();
 const zod= require('zod');
-const {User, Course}=require('../models')
+const {User, Course, Lecture}=require('../models')
 const jwt=require('jsonwebtoken');
 const dotenv = require('dotenv');
 const authorize = require('../middleware');
@@ -91,7 +91,12 @@ studentRouter.get('/mycourse',authorize(['student','teacher']),async(req,res)=>{
 
     try {
       // Find the user and populate the enrolled courses
-      const user = await User.findById(userId).populate('courses');
+      const user = await User.findById(userId).populate({
+        path: 'courses',
+        populate: {
+          path: 'lectures', // Assuming each course has a lectures field
+          model: 'Lecture', // Replace with your actual Lecture model name
+        }}); // Populate the lectures field of the courses
   
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
@@ -131,7 +136,7 @@ studentRouter.get('/course/:id',authorize('student'),async(req,res)=>{
       }
   
       // Find the course by ID
-      const course = await Course.findById(courseId);
+      const course = await Course.findById(courseId).populate('lectures');
 
       res.status(200).json({ course });
     

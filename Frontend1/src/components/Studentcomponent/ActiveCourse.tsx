@@ -40,7 +40,7 @@ useEffect(() => {
                   <p className="text-gray-500 text-lg font-light capitalize">{course.description}</p>
                   <p className="text-gray-500 font-thin">Duration: {course.duration} week</p>
                   
-                 <Link to={'/content'}><Button className="mt-1">Study</Button></Link> 
+                 <Link to={`/content/${course._id}`}><Button className="mt-1">Study</Button></Link> 
                 </div>
               ))
             }

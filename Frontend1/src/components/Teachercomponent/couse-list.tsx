@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import axios from 'axios'
 import { BACKEND_URL } from '@/lib/config'
 import { useEffect } from 'react'
+import {toast,Toaster} from 'react-hot-toast'
 // import { Textarea } from '@/components/ui/textarea'
 
 type Course = {
@@ -21,37 +22,19 @@ type Course = {
 type Lecture = {
   _id: number
   title: string
-  content: string
   date: string
   materials: string[]
 }
 
-// const initialCourses: Course[] = [
-//   {
-//     id: 1,
-//     title: 'Introduction to React',
-//     description: 'Learn the basics of React',
-//     lectures: [
-//       { id: 1, title: 'React Fundamentals', date: '2023-06-15', content:"", materials: ['Slides.pdf', 'Code.zip'] },
-//       { id: 2, title: 'State and Props', date: '2023-06-22', content:"", materials: ['Slides.pdf'] },
-//     ],
-//   },
-//   {
-//     id: 2,
-//     title: 'Advanced JavaScript',
-//     description: 'Deep dive into JavaScript concepts',
-//     lectures: [
-//       { id: 1, title: 'Closures and Scopes',content:"", date: '2023-06-18', materials: ['Notes.pdf'] },
-//     ],
-//   },
-// ]
 
 export function CourseList() {
   const [courses, setCourses] = useState<Course[]>([]);
   const[isloading, setIsloading] = useState(false); 
-//   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null)
+
   const [newLecture, setNewLecture] = useState({ title: '', date: '' })
-  const [newMaterial, setNewMaterial] = useState({ lectureId: 0, file: null as File | null })
+  const [newMaterial, setNewMaterial] = useState<{ lectureId: number, file: File | null }>({ lectureId: 0, file: null });
+
+
 
 
 
@@ -72,46 +55,56 @@ useEffect(() => {
   },[]);
 
   const handleScheduleLecture = (courseId: number) => {
-    if (newLecture.title && newLecture.date) {
-      setCourses(courses.map(course => {
-        if (course._id === courseId) {
-          return {
-            ...course,
-            lectures: [...course.lectures, { _id: Date.now(), content: '', ...newLecture, materials: [] }]
-          }
-        }
-        return course
-      }))
-      setNewLecture({ title: '', date: '' })
-    }
-  }
+    //backend call to schedule lecture
 
-  const handleUploadMaterial = (courseId: number, lectureId: number) => {
-    if (newMaterial.file) {
-      setCourses(courses.map(course => {
-        if (course._id === courseId) {
-          return {
-            ...course,
-            lectures: course.lectures.map(lecture => {
-              if (lecture._id === lectureId) {
-                return {
-                  ...lecture,
-                  materials: [...lecture.materials, newMaterial.file!.name]
-                }
-              }
-              return lecture
-            })
-          }
-        }
-        return course
-      }))
-      setNewMaterial({ lectureId: 0, file: null })
+    axios.post(`${BACKEND_URL}/lecture/add/${courseId}`, {
+      title: newLecture.title,
+      date: newLecture.date
+    },{headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}})
+    .then((res) => {
+      console.log(res.data)
+      toast.success('Lecture scheduled successfully!')
+    }).catch((err) => {
+      console.error(err)
+      toast.error("Failed to schedule lecture");
+    })
+
+
     }
-  }
+  
+
+    const handleUploadMaterial = async (lectureId: number) => {
+      if (newMaterial.file) {
+      setIsloading(true);
+    
+        const formData = new FormData();
+        formData.append('file', newMaterial.file);
+        
+    
+        try {
+           await axios.post(`${BACKEND_URL}/lecture/upload/${lectureId}`, formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+    
+        
+    
+          setNewMaterial({ lectureId: 0, file: null });
+          toast.success('File uploaded successfully!');
+        } catch (error) {
+          console.error('Error uploading file:', error);
+          toast.error('Failed to upload file');
+        } finally {
+          setIsloading(false);
+        }
+      }
+    };
 
   return (
    
     <div className="space-y-6">
+      <Toaster/>
        {isloading && <Loader className="mx-auto" size={50} />}
        {courses.length === 0 && <h2 className="text-2xl font-bold mb-4">No Active Courses ,kindly create one</h2>}
       {courses.map(course => (
@@ -154,7 +147,7 @@ useEffect(() => {
                           </div>
                         </div>
                         <DialogFooter>
-                          <Button onClick={() => handleUploadMaterial(course._id, lecture._id)}>Upload</Button>
+                          <Button onClick={() => handleUploadMaterial(lecture._id)}>Upload</Button>
                         </DialogFooter>
                       </DialogContent>
                     </Dialog>

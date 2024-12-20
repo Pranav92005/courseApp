@@ -17,7 +17,7 @@ function App() {
       <Route path="/" element={<Wrapper />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/courses" element={<Courses />} />
-      <Route path="/content" element={<LecturesAndNotesPage/>} />
+      <Route path="/content/:id" element={<LecturesAndNotesPage/>} />
       <Route path ="/teacher" element={<TDashboardPage/>} />
       <Route path="/my-courses" element={<MyCourses />} />
       <Route path="*" element={<h1>404 Not Found</h1>} />
