@@ -7,9 +7,8 @@ const authorize = (requiredRoles) => {
   return (req, res, next) => {
     const token = req.header('Authorization')?.split(' ')[1];
     if (!token) return res.status(401).json({ message: 'Access token is missing' });
-
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET );
       req.user = decoded; // Attach user data to the request
 
       // Normalize requiredRoles to an array if it's a single role string
