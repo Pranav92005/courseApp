@@ -1,9 +1,52 @@
-import React, { useState } from 'react'
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import React, { useState, useEffect} from 'react'
+import { Card, CardDescription, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import ActiveCourses from './Studentcomponent/ActiveCourse'
 import TopCourses from '@/components/Studentcomponent/top_courses'
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+
+function LoginForm({loginId, password, setLoginId, setPassword}) {
+  // const [loginId, setLoginId] = useState('')
+  // const [password, setPassword] = useState('')
+ 
+  return (
+    <div className="flex items-center justify-center h-screen bg-slate-950">
+    <Card className="w-full max-w-md mx-auto mt-8">
+      <CardHeader>
+        <CardTitle className="text-2xl font-bold text-center">Login</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <form className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="loginId">Login ID</Label>
+            <Input
+              id="loginId"
+              type="text"
+              value={loginId}
+              className='border-gray-300 border-2'
+              onChange={(e) => setLoginId(e.target.value)}
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              className='border-gray-300 border-2'
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+        </form>
+      </CardContent>
+    </Card>
+    </div>
+  )
+}
 
 const Header = () => (
   <Card className="mb-6">
@@ -43,6 +86,18 @@ const TopCourse = () => (
 export default function Admin() {
   const [showActiveCourses, setShowActiveCourses] = useState(false)
   const [showTopCourses, setShowTopCourses] = useState(false)
+  const [loginId, setLoginId] = useState('')
+  const [password, setPassword] = useState('')
+  const [show,setShow] = useState(false)
+
+  useEffect(() => {
+    if(loginId === 'admin' && password === 'admin'){
+      setShow(true)
+    }
+}, [loginId, password]) 
+
+  if(!show)
+    return <LoginForm loginId={loginId} password={password} setLoginId={setLoginId} setPassword={setPassword}/>
 
   return (
     <main className="flex-grow p-6 md:p-8 bg-slate-300 h-screen">
