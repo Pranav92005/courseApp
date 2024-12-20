@@ -12,10 +12,11 @@ export default function SimpleLogin() {
   const handleLogin = async () => {
     setIsLoading(true)
     // Simulate a login process
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    setIsLoading(false)
+    await new Promise(resolve => setTimeout(resolve, 1000))
+   
     // Here you would typically handle the actual login logic
     loginWithRedirect()
+    setIsLoading(false)
   }
 
   return (

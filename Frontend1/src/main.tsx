@@ -4,7 +4,7 @@ import './index.css'
 import App from './App.js'
 import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
-import { store } from './app/store'
+import { store } from './app/store.ts'
 import { Auth0Provider } from '@auth0/auth0-react';
 
 createRoot(document.getElementById('root')!).render(
