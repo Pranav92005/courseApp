@@ -7,7 +7,14 @@ import TopCourses from '@/components/Studentcomponent/top_courses'
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-function LoginForm({loginId, password, setLoginId, setPassword}) {
+interface LoginFormProps {
+  loginId: string;
+  password: string;
+  setLoginId: (value: string) => void;
+  setPassword: (value: string) => void;
+}
+
+function LoginForm({ loginId, password, setLoginId, setPassword }: LoginFormProps) {
   // const [loginId, setLoginId] = useState('')
   // const [password, setPassword] = useState('')
  

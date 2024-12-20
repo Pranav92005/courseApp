@@ -11,7 +11,7 @@ A web application to streamline the management of courses, lectures, and materia
 - **Authorization:**
   - Role-based access control using `zod`.
   - `@gmail.com` emails are assigned the role of `Student`.
-  - `@iitbbs.sc.in` emails are assigned the role of `Teacher`.
+  - `@iitbbs.ac.in` emails are assigned the role of `Teacher`.
 
 ### Teacher Features
 - Create and manage courses.
