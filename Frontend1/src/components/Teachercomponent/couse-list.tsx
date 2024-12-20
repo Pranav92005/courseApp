@@ -18,6 +18,7 @@ type Course = {
 type Lecture = {
   id: number
   title: string
+  content: string
   date: string
   materials: string[]
 }
@@ -28,8 +29,8 @@ const initialCourses: Course[] = [
     title: 'Introduction to React',
     description: 'Learn the basics of React',
     lectures: [
-      { id: 1, title: 'React Fundamentals', date: '2023-06-15', materials: ['Slides.pdf', 'Code.zip'] },
-      { id: 2, title: 'State and Props', date: '2023-06-22', materials: ['Slides.pdf'] },
+      { id: 1, title: 'React Fundamentals', date: '2023-06-15', content:"", materials: ['Slides.pdf', 'Code.zip'] },
+      { id: 2, title: 'State and Props', date: '2023-06-22', content:"", materials: ['Slides.pdf'] },
     ],
   },
   {
@@ -37,7 +38,7 @@ const initialCourses: Course[] = [
     title: 'Advanced JavaScript',
     description: 'Deep dive into JavaScript concepts',
     lectures: [
-      { id: 1, title: 'Closures and Scopes', date: '2023-06-18', materials: ['Notes.pdf'] },
+      { id: 1, title: 'Closures and Scopes',content:"", date: '2023-06-18', materials: ['Notes.pdf'] },
     ],
   },
 ]
@@ -54,7 +55,7 @@ export function CourseList() {
         if (course.id === courseId) {
           return {
             ...course,
-            lectures: [...course.lectures, { id: Date.now(), ...newLecture, materials: [] }]
+            lectures: [...course.lectures, { id: Date.now(), content: '', ...newLecture, materials: [] }]
           }
         }
         return course

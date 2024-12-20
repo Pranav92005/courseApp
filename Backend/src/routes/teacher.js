@@ -12,9 +12,7 @@ const courseSchema=zod.object({
     
 });
 
-
 //teacher course creation route
-
 teacherRouter.post('/course',authorize('teacher'), async(req,res)=>{
     const courseSuccess=courseSchema.parse(req.body);
     if(!courseSuccess){
@@ -42,17 +40,11 @@ try{
     
 })
 
-
-
 //teacher course update route (add lecture,notes,etc)
 //multer for file upload and create file link and save it to db under lecture section of course
 
 teacherRouter.put('/course/:id',authorize('teacher'),async(req,res)=>{
     
 })
-
-
-
-
 
 module.exports=teacherRouter;

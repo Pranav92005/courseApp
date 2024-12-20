@@ -7,15 +7,12 @@ const dotenv = require('dotenv');
 const authorize = require('../middleware');
 dotenv.config({ path: '.env' });
 
-
-
 const userSchema=zod.object({
     name:zod.string().nonempty(),
     email:zod.string().email(),
     oauthId:zod.string().nonempty(),
     role:zod.string(),
 });
-
 
 //user add route
 
@@ -32,9 +29,6 @@ studentRouter.post('/add',async(req,res)=>{
     const token=jwt.sign({id:user._id,role:user.role},process.env.JWT_SECRET);
     res.status(201).json({auth:token});
 })
-
-
-
 
 //user course enrollment route
 
@@ -73,13 +67,6 @@ studentRouter.post('/enroll/:id',authorize('student'),async(req,res)=>{
       res.status(500).json({ message: 'Server error' });
     }
   })
-
-
-
-
-
-
-
 
 //user  all course info get route
 

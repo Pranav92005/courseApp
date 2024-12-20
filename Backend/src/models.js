@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 
 dotenv.config({ path: '.env' });
 
-const databaseUrl = process.env.DATABASE_URL;
+const databaseUrl = process.env.DATABASE_URL || "mongodb+srv://pranavaditya92005:Pranav%402005@cluster0.wdb6dxo.mongodb.net/CourseApp";
 
 if (!databaseUrl) {
   throw new Error('DATABASE_URL is not defined');
@@ -49,13 +49,7 @@ mongoose.connect(databaseUrl)
 
   });
 
-
-
-
-
-
   //course schema
-
   const courseSchema = new mongoose.Schema({
     title: {
       type: String,
@@ -84,7 +78,7 @@ mongoose.connect(databaseUrl)
     }],
     createdAt: {
       type: Date,
-      default: Date.now
+      default: Date.now()
     },
     duration: {
       type: Number,
@@ -92,13 +86,34 @@ mongoose.connect(databaseUrl)
     }
   });
 
-
+  const lectureSchema = new mongoose.Schema({
+ 
+    title: {
+      type: String,
+      required: true
+    },
+    content: {
+      type: String,
+      required: true
+    },
+    date: {
+      type: Date,
+      required: true
+    },
+    course: {
+      type: mongoose.Schema.Types.ObjectId, // course it is associated with
+      ref: 'Course',
+    },
+    materials : {
+      type : [String]
+    }
+  });
 
  const User = mongoose.model('User', userSchema);
  const Course = mongoose.model('Course', courseSchema);
+ const Lecture = mongoose.model('Lecture', lectureSchema);
 
-
- module.exports = { User, Course };
+ module.exports = { User, Course, Lecture };
 
 
   
