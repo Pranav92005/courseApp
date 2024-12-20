@@ -1,7 +1,8 @@
 import Navigation from '@/components/Studentcomponent/navigation'
-import ActiveCourses from '@/components/Studentcomponent/activecourses'
+
 import TopCourses from '@/components/Studentcomponent/top_courses'
 import Footer from '@/components/Studentcomponent/footer'
+import Activecourse from '@/components/Studentcomponent/ActiveCourse'
 
 export default function Dashboard() {
   return (
@@ -11,7 +12,8 @@ export default function Dashboard() {
         <div className="max-w-7xl mx-auto">
           <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
           <div className="grid grid-cols-1 gap-6 mx-4">
-            <ActiveCourses />
+            <h1 className='font-semibold'>Active Courses</h1>
+            <Activecourse/>
             <TopCourses/>
            
           </div>

@@ -10,8 +10,8 @@ dotenv.config({ path: '.env' });
 const userSchema=zod.object({
     name:zod.string().nonempty(),
     email:zod.string().email(),
-    oauthId:zod.string().nonempty(),
-    role:zod.string(),
+    oauthId:zod.string(),
+    role:zod.string()
 });
 
 //user add route
@@ -25,14 +25,17 @@ studentRouter.post('/add',async(req,res)=>{
     if(!user){
         user=await User.create(
         userSuccess
-    );}
+    );
+    
+    ;}
+    
     const token=jwt.sign({id:user._id,role:user.role},process.env.JWT_SECRET);
     res.status(201).json({auth:token});
 })
 
 //user course enrollment route
 
-studentRouter.post('/enroll/:id',authorize('student'),async(req,res)=>{
+studentRouter.put('/enroll/:id',authorize('student'),async(req,res)=>{
     
     const courseId = req.params.id;
     const userId = req.user.id; // Extracted from token by middleware
@@ -72,7 +75,8 @@ studentRouter.post('/enroll/:id',authorize('student'),async(req,res)=>{
 
 studentRouter.get('/courses',authorize('student') ,async(req,res)=>{
     
-    const courses=await Course.find({}).select('-lectures -students'); ;
+    const courses=await Course.find({}).populate('teacher')
+    .select('-lectures -students'); 
     
     res.status(200).json({courses});
 
