@@ -9,6 +9,7 @@ import MyCourses from './Studentpages/Mycourses'
 import TDashboardPage from './teacher/TeacherDashboard'
 import CreateCourse from './teacher/createCourse'
 import Profile from './Studentpages/Profile'
+import Admin from './components/Admin'
 function App() {
   
   return (
@@ -23,6 +24,7 @@ function App() {
       <Route path="*" element={<h1>404 Not Found</h1>} />
       <Route path="create-course" element={<CreateCourse/>} />
       <Route path='/profile' element={<Profile/>} />
+      <Route path='/admin' element={<Admin/>} />
     </Routes>
      
     </>

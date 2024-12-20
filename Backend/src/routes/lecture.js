@@ -37,7 +37,6 @@ lectureRouter.post('/upload/:id', upload.single('file'), async (req, res) => {
         const material = `http://localhost:3000/uploads/${file.filename}`;
         const id = req.params.id;
 
-<<<<<<< Updated upstream
         // Find the lecture to retrieve existing materials
         const lecture = await Lecture.findById(id);
 
@@ -59,20 +58,6 @@ lectureRouter.post('/upload/:id', upload.single('file'), async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: "Server error" });
-=======
-lectureRouter.post('/upload', upload.single('file'), async (req, res) => {
-    var file = null;
-    try{
-        file = req.file;
-        
-        lectureRouter.patch('/update/:id', async (req, res) => {
-            const id = req.params.id;
-            const lecture = await Lecture.findByIdAndUpdate(id, {
-                materials: [...materials, file.path]
-            });
-            res.status(200).json({ lecture });
-        })
->>>>>>> Stashed changes
     }
 });
 
