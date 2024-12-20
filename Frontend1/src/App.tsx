@@ -8,7 +8,7 @@ import Wrapper from './components/Wrapper'
 import MyCourses from './Studentpages/Mycourses' 
 import TDashboardPage from './teacher/TeacherDashboard'
 import CreateCourse from './teacher/createCourse'
-
+import Profile from './Studentpages/Profile'
 function App() {
   
   return (
@@ -22,6 +22,7 @@ function App() {
       <Route path="/my-courses" element={<MyCourses />} />
       <Route path="*" element={<h1>404 Not Found</h1>} />
       <Route path="create-course" element={<CreateCourse/>} />
+      <Route path='/profile' element={<Profile/>} />
     </Routes>
      
     </>
